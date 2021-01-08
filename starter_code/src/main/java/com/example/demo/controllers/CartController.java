@@ -3,6 +3,8 @@ package com.example.demo.controllers;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,21 +33,27 @@ public class CartController {
 	
 	@Autowired
 	private ItemRepository itemRepository;
+
+	private Logger log = LoggerFactory.getLogger(CartController.class);
 	
 	@PostMapping("/addToCart")
 	public ResponseEntity<Cart> addTocart(@RequestBody ModifyCartRequest request) {
 		User user = userRepository.findByUsername(request.getUsername());
 		if(user == null) {
+			log.error("[ADD TO CART] [Fail] User -> " + request.getUsername() +", REASON -> User not found" );
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
 		Optional<Item> item = itemRepository.findById(request.getItemId());
 		if(!item.isPresent()) {
+			log.error("[ADD TO CART] [Fail] Item id -> " + request.getItemId() +", REASON -> Item not found" );
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
 		Cart cart = user.getCart();
 		IntStream.range(0, request.getQuantity())
 			.forEach(i -> cart.addItem(item.get()));
 		cartRepository.save(cart);
+
+		log.info("[ADD TO CART] [Success] User -> " + user.getUsername());
 		return ResponseEntity.ok(cart);
 	}
 	
@@ -53,16 +61,20 @@ public class CartController {
 	public ResponseEntity<Cart> removeFromcart(@RequestBody ModifyCartRequest request) {
 		User user = userRepository.findByUsername(request.getUsername());
 		if(user == null) {
+			log.error("[REMOVE FROM CART] [Fail] User -> " + request.getUsername() +", REASON -> User not found" );
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
 		Optional<Item> item = itemRepository.findById(request.getItemId());
 		if(!item.isPresent()) {
+			log.error("[REMOVE FROM CART] [Fail] Item id -> " + request.getItemId() +", REASON -> Item not found" );
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
 		Cart cart = user.getCart();
 		IntStream.range(0, request.getQuantity())
 			.forEach(i -> cart.removeItem(item.get()));
 		cartRepository.save(cart);
+
+		log.info("[REMOVE FROM CART] [Success] User -> " + user.getUsername());
 		return ResponseEntity.ok(cart);
 	}
 		

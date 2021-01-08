@@ -49,16 +49,16 @@ public class UserController {
 		user.setCart(cart);
 
 		if(createUserRequest.getPassword().length() < 7 ){
-			log.error("[CREATE USER] [Fail] for user : " + user.getUsername() +", REASON : invalid password" );
-			return ResponseEntity.badRequest().body("Password must be at least 7 characters.");
+			log.error("[CREATE USER] [Fail]  user -> " + user.getUsername() +", REASON -> invalid password");
+			return ResponseEntity.badRequest().body("Password must have at least 7 characters");
 		}else if (!createUserRequest.getPassword().equals(createUserRequest.getConfirmPassword())){
-			log.error("[CREATE USER] [Fail] for user : " + user.getUsername() +", REASON : password mismatching" );
-			return ResponseEntity.badRequest().body("Password field does not match confirm password field");
+			log.error("[CREATE USER] [Fail]  user -> " + user.getUsername() +", REASON > password mismatch");
+			return ResponseEntity.badRequest().body("Password does not match confirm password");
 		}
 		String encodedPassword = bCryptPasswordEncoder.encode(createUserRequest.getPassword());
 		user.setPassword(encodedPassword);
 		userRepository.save(user);
-		log.info("[CREATE USER] [Success] for user : " + user.getUsername());
+		log.info("[CREATE USER] [Success] user -> " + user.getUsername());
 		return ResponseEntity.ok(user);
 	}
 	
