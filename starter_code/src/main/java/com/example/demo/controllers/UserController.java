@@ -52,7 +52,7 @@ public class UserController {
 			log.error("[CREATE USER] [Fail]  user -> " + user.getUsername() +", REASON -> invalid password");
 			return ResponseEntity.badRequest().body("Password must have at least 7 characters");
 		}else if (!createUserRequest.getPassword().equals(createUserRequest.getConfirmPassword())){
-			log.error("[CREATE USER] [Fail]  user -> " + user.getUsername() +", REASON > password mismatch");
+			log.error("[CREATE USER] [Fail]  user -> " + user.getUsername() +", REASON -> password mismatch");
 			return ResponseEntity.badRequest().body("Password does not match confirm password");
 		}
 		String encodedPassword = bCryptPasswordEncoder.encode(createUserRequest.getPassword());
