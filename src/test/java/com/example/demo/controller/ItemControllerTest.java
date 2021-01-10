@@ -77,7 +77,7 @@ public class ItemControllerTest {
         ResponseEntity<List<Item>> response = itemController.getItemsByName("item");
         Assert.assertNotNull(response);
         Assert.assertEquals(200, response.getStatusCodeValue());
-        List<Item> items = Arrays.asList(createItem(1), createItem(2));
+        List<Item> items = Arrays.asList(createItem(1), createItem(2),createItem(3));
         Assert.assertEquals(createItems(), items);
         verify(itemRepository , times(1)).findByName("item");
     }
