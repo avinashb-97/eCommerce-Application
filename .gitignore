@@ -1,1 +1,5 @@
-.idea/
+/.idea/
+/ecommerce-application.iml
+/target/
+/.mvn/
+*.iml
